@@ -1,25 +1,47 @@
+from tokens import Integer, Float
+
 class Interpreter:
     def __init__(self, tree):
         self.tree = tree
 
-    def compute_bin(setf, left, op, right):
-        if left.type == "INT":
-            left = int(left)
-        elif left.type == "FLT":
-            left = float(left)
-        if right.type == "INT":
-            right = int(right)
+    def read_INT(self, value):
+        return int(value)
+    
+    def read_FLT(self, value):
+        return float(value)
 
-        if right.type == "FLT":
-            right = float(right)
+    def compute_bin(self, left, op, right):
+        left_type = left.type
+        right_type = right.type
 
-        if op.value == "*":
-            return left + right
+        left = getattr(self, f"read_{left_type}")(left.value)
+        right = getattr(self, f"read_{right_type}")(right.value)
+
+        if op.value == "+":
+            output = left + right
+        elif op.value == "-":
+            output = left - right
+        elif op.value == "*":
+            output = left * right
+        elif op.value == "/":
+            output = left / right
+
+        return Integer(output) if (left_type == "INT" and right_type == "INT") else Float(output)
 
 
-    def interpret(self):
-        left_node = self.tree[0]
-        right_node = self.tree[2]
-        operator = self.tree[1]
+    def interpret(self, tree=None):
+        if tree is None:
+            tree = self.tree
+        
+        left_node = tree[0]
+        if isinstance(left_node, list):
+            left_node = self.interpret(left_node)
 
-        return self.compute_bin(left_node, operator, right_node)
+        right_node = tree[2]
+        if isinstance(right_node, list):
+            right_node = self.interpret(right_node)
+
+
+        operator = tree[1]
+
+        return self.compute_bin(left_node, operator, right_node) 
