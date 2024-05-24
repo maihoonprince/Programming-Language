@@ -9,10 +9,14 @@ while True:
     tokenizer = Lexer(text)
     tokens = tokenizer.tokenize()
 
+    print(tokens)
+
     parser = Parser(tokens)
     tree = parser.parse()
 
-    interpreter = Interpreter(tree)
-    result = interpreter.interpret()
+    print(tree)
 
-    print(result)
+    # interpreter = Interpreter(tree)
+    # result = interpreter.interpret()
+
+    # print(result)
