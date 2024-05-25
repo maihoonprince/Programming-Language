@@ -1,7 +1,7 @@
 class Data:
     def __init__(self):
-        self.variable = {}
-
+        self.variables = {}
+    
     def read(self, id):
         return self.variables[id]
     
